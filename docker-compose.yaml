@@ -1,0 +1,30 @@
+services:
+  influxdb:
+    image: influxdb:2
+    ports:
+    - "8086:8086"
+    environment:
+    - DOCKER_INFLUXDB_INIT_MODE=setup
+    - DOCKER_INFLUXDB_INIT_USERNAME=loadtest
+    - DOCKER_INFLUXDB_INIT_PASSWORD=loadtest
+    - DOCKER_INFLUXDB_INIT_ORG=loadtest
+    - DOCKER_INFLUXDB_INIT_BUCKET=loadtest
+    - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=loadtest
+
+  grafana:
+    # grafana 12 by default enable v2 schema,
+    # which cannot be provisioned.
+    image: grafana/grafana:11.6
+    ports:
+    - "3000:3000"
+    environment:
+    # You likely will see tutorials or GenAI-generated code to use
+    # GF_AUTH_ANONYMOUS_ENABLED=true GF_AUTH_ANONYMOUS_ORG_ROLE=Admin GF_AUTH_BASIC_ENABLED=false
+    # But that no longer works as of 12.2
+    - GF_SECURITY_ADMIN_USER=admin
+    # We have to use a different password than the default `admin`,
+    # Otherwise Grafana will prompt you to change it on first login.
+    - GF_SECURITY_ADMIN_PASSWORD=securepassword
+    - GF_AUTH_BASIC_ENABLED=true
+    volumes:
+    - ./etc_grafana_provisioning:/etc/grafana/provisioning
