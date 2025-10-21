@@ -27,3 +27,73 @@ The example in this repository is for demo purpose only.
 
 1. Security hardening by generating the credentials instead of using static ones.
 2. Use volumes to persist real-time results.
+
+## The Flux queries used in the dashboard
+
+The following Flux queries are used in building the dashboard.
+They are listed here for reference only.
+
+```flux
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "http_reqs")
+  |> filter(fn: (r) => r["_field"] == "value")
+  |> group(columns: ["scenario"])
+  |> aggregateWindow(every: 1s, fn: sum)
+  |> yield(name: "http_reqs_per_second")
+
+
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "iterations")
+  |> filter(fn: (r) => r["_field"] == "value")
+  |> group(columns: ["scenario"])
+  |> aggregateWindow(every: 1s, fn: sum)
+  |> yield(name: "iterations_per_second")
+
+
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "http_req_duration")
+  |> filter(fn: (r) => r._field == "value")
+  |> group(columns: [])
+  |> aggregateWindow(every: 1s, fn: mean)
+  |> yield(name: "mean")
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "http_req_duration")
+  |> filter(fn: (r) => r._field == "value")
+  |> group(columns: [])
+  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.5))
+  |> yield(name: "p50")
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "http_req_duration")
+  |> filter(fn: (r) => r._field == "value")
+  |> group(columns: [])
+  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.95))
+  |> yield(name: "p95")
+
+
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "iteration_duration")
+  |> filter(fn: (r) => r._field == "value")
+  |> group(columns: ["scenario"])
+  |> aggregateWindow(every: 1s, fn: mean)
+  |> yield(name: "mean")
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "iteration_duration")
+  |> filter(fn: (r) => r._field == "value")
+  |> group(columns: ["scenario"])
+  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.5))
+  |> yield(name: "p50")
+from(bucket: v.defaultBucket)
+  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)
+  |> filter(fn: (r) => r._measurement == "iteration_duration")
+  |> filter(fn: (r) => r._field == "value")
+  |> group(columns: ["scenario"])
+  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.95))
+  |> yield(name: "p95")
+```
