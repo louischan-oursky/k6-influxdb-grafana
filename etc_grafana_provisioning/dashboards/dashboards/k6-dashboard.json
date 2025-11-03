@@ -81,7 +81,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 0,
         "y": 0
@@ -107,7 +107,7 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_reqs\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: 1s, fn: sum)\n  |> yield(name: \"http_reqs_per_second\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_reqs\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: sum)\n  |> yield(name: \"http_reqs_per_second\")\n",
           "refId": "http_reqs_per_second"
         }
       ],
@@ -174,7 +174,7 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 12,
         "y": 0
@@ -200,7 +200,7 @@
             "type": "influxdb",
             "uid": "influxdb"
           },
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"iterations\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: 1s, fn: sum)\n  |> yield(name: \"iterations_per_second\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"iterations\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: sum)\n  |> yield(name: \"iterations_per_second\")\n",
           "refId": "iterations_per_second"
         }
       ],
@@ -305,10 +305,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 6
       },
       "id": 3,
       "options": {
@@ -327,7 +327,7 @@
       "pluginVersion": "11.6.6",
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [])\n  |> aggregateWindow(every: 1s, fn: mean)\n  |> yield(name: \"mean\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [])\n  |> aggregateWindow(every: v.windowPeriod, fn: mean)\n  |> yield(name: \"mean\")\n",
           "refId": "mean"
         },
         {
@@ -336,7 +336,7 @@
             "uid": "influxdb"
           },
           "hide": false,
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [])\n  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.5))\n  |> yield(name: \"p50\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [])\n  |> aggregateWindow(every: v.windowPeriod, fn: (tables=<-, column) => tables |> quantile(q: 0.5))\n  |> yield(name: \"p50\")\n",
           "refId": "p50"
         },
         {
@@ -345,7 +345,7 @@
             "uid": "influxdb"
           },
           "hide": false,
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [])\n  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.95))\n  |> yield(name: \"p95\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"http_req_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [])\n  |> aggregateWindow(every: v.windowPeriod, fn: (tables=<-, column) => tables |> quantile(q: 0.95))\n  |> yield(name: \"p95\")\n",
           "refId": "p95"
         }
       ],
@@ -450,10 +450,10 @@
         ]
       },
       "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 6
       },
       "id": 4,
       "options": {
@@ -472,7 +472,7 @@
       "pluginVersion": "11.6.6",
       "targets": [
         {
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"iteration_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: 1s, fn: mean)\n  |> yield(name: \"mean\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"iteration_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: mean)\n  |> yield(name: \"mean\")\n",
           "refId": "mean"
         },
         {
@@ -481,7 +481,7 @@
             "uid": "influxdb"
           },
           "hide": false,
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"iteration_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.5))\n  |> yield(name: \"p50\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"iteration_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: (tables=<-, column) => tables |> quantile(q: 0.5))\n  |> yield(name: \"p50\")\n",
           "refId": "p50"
         },
         {
@@ -490,11 +490,114 @@
             "uid": "influxdb"
           },
           "hide": false,
-          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"iteration_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: 1s, fn: (tables=<-, column) => tables |> quantile(q: 0.95))\n  |> yield(name: \"p95\")\n",
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop:v.timeRangeStop)\n  |> filter(fn: (r) => r._measurement == \"iteration_duration\")\n  |> filter(fn: (r) => r._field == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: (tables=<-, column) => tables |> quantile(q: 0.95))\n  |> yield(name: \"p95\")\n",
           "refId": "p95"
         }
       ],
       "title": "iteration_duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "influxdb"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byFrameRefID",
+              "options": "mean"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "${__series.name}(mean)"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 12
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.6.6",
+      "targets": [
+        {
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"http_req_failed\")\n  |> filter(fn: (r) => r[\"_field\"] == \"value\")\n  |> group(columns: [\"scenario\"])\n  |> aggregateWindow(every: v.windowPeriod, fn: mean)\n  |> yield(name: \"http_req_failed\")",
+          "refId": "mean"
+        }
+      ],
+      "title": "http_req_failed",
       "type": "timeseries"
     }
   ],
