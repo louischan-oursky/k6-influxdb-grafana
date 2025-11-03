@@ -10,6 +10,8 @@ services:
     - DOCKER_INFLUXDB_INIT_ORG=loadtest
     - DOCKER_INFLUXDB_INIT_BUCKET=loadtest
     - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=loadtest
+    volumes:
+    - ./influxdb_data:/var/lib/influxdb2
 
   grafana:
     # grafana 12 by default enable v2 schema,
