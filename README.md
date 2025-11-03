@@ -15,7 +15,7 @@ and view the results in Grafana.
 3. Run `make k6` to build a custom build of k6 with support for `github.com/grafana/xk6-output-influxdb`.
 3. Run `docker compose up` to start InfluxDB and Grafana.
 4. Visit Grafana at `http://localhost:3000`. The credentials are in `docker-compose.yaml`.
-5. Run `make run` to run a sample load test.
+5. Run `TEST_RUN_ID=some_string_to_identify_this_run make run` to run a sample load test.
 6. See the real-time results in Grafana dashboard.
 
 ## What's next
@@ -23,10 +23,14 @@ and view the results in Grafana.
 You are supposed to write your own k6 testing scenarios.
 The example in this repository is for demo purpose only.
 
+## Test results
+
+The results are written to `./influxdb_data/`.
+If you want to clear everything, you can remove this directory.
+
 ## TODO
 
 1. Security hardening by generating the credentials instead of using static ones.
-2. Use volumes to persist real-time results.
 
 ## The Flux queries used in the dashboard
 
