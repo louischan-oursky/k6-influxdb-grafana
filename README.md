@@ -8,6 +8,15 @@ The intended use case is letting you to run k6,
 and stream the real-time results to InfluxDB v2,
 and view the results in Grafana.
 
+> [!WARNING]
+> If any URLs in your test is unique, for example, having ID in URL path,
+> then you must group URL, as documented in https://grafana.com/docs/k6/latest/using-k6/http-requests/#url-grouping
+> Failing to do so will lead to out-of-memory issue very soon.
+
+> [!WARNING]
+> This setup has been tested on a ordinary machine with 2 CPUs and 8GB memory running a 30-minute test.
+> If you run a test longer than 30-minute, say, a few hours, you will like encounter out-of-memory issue.
+
 ## How do I use this
 
 1. Your machine has `xk6` and `go` available in `PATH`. If you are a Nix Flake user and a direnv user, then you can just make use of the flake in this repository.
